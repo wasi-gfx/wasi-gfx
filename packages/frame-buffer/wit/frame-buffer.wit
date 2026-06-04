@@ -1,0 +1,17 @@
+package wasi-gfx:frame-buffer@0.1.0;
+
+world imports {
+  import frame-buffer;
+}
+
+interface frame-buffer {
+  resource device {
+    constructor();
+  }
+
+  resource buffer {
+    // TODO: This should be replcated with something that doesn't require a copy.
+    get: func() -> list<u8>;
+    set: func(val: list<u8>);
+  }
+}
