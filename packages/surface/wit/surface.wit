@@ -18,13 +18,13 @@ interface surface {
 
     request-set-size: func(height: option<u32>, width: option<u32>);
 
-    resize: func() -> stream<resize-event>;
-    frame: func() -> stream<frame-event>;
-    pointer-up: func() -> stream<pointer-event>;
-    pointer-down: func() -> stream<pointer-event>;
-    pointer-move: func() -> stream<pointer-event>;
-    key-up: func() -> stream<key-event>;
-    key-down: func() -> stream<key-event>;
+    on-resize: func() -> stream<resize-event>;
+    on-frame: func() -> stream<frame-event>;
+    on-pointer-up: func() -> stream<pointer-event>;
+    on-pointer-down: func() -> stream<pointer-event>;
+    on-pointer-move: func() -> stream<pointer-event>;
+    on-key-up: func() -> stream<key-event>;
+    on-key-down: func() -> stream<key-event>;
   }
 
   record resize-event {

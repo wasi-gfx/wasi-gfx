@@ -1,3 +1,29 @@
-world surface-webgpu {
-  // TODO: implement
+interface surface-webgpu {
+  use wasi:webgpu/webgpu@0.0.1.{gpu-device, gpu-texture, gpu-texture-format, gpu-texture-usage, predefined-color-space, gpu-canvas-tone-mapping, gpu-canvas-alpha-mode};
+  use surface.{surface};
+
+  get-surface-context: func(surface: borrow<surface>) -> gpu-surface-context;
+
+  record gpu-surface-configuration {
+    device: borrow<gpu-device>,
+    format: gpu-texture-format,
+    usage: option<gpu-texture-usage>,
+    view-formats: option<list<gpu-texture-format>>,
+    color-space: option<predefined-color-space>,
+    tone-mapping: option<gpu-canvas-tone-mapping>,
+    alpha-mode: option<gpu-canvas-alpha-mode>,
+  }
+
+  resource gpu-surface-context {
+    configure: func(configuration: gpu-surface-configuration);
+    unconfigure: func();
+    get-current-texture: func() -> gpu-texture;
+    // TODO: consider if needed
+    present: func();
+  }
+}
+
+world webgpu-imports {
+  import surface-webgpu;
+  import wasi:webgpu/webgpu@0.0.1;
 }
