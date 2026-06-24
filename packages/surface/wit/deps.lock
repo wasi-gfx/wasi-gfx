@@ -1,0 +1,9 @@
+[frame-buffer]
+path = "../../frame-buffer/wit"
+sha256 = "76a5592b40a771e63d4f7d845562efdde32409aa51ed7704658fe6ffdac49c1c"
+sha512 = "2858bef8e22684640db9829e2c332e4fccaf05854ee745dfd359719c2e35cd05b046da4671cb8bbc58cabda0abbad3dd0f093cf875fafc48283d38a296d65941"
+
+[webgpu]
+url = "https://github.com/WebAssembly/wasi-gfx/archive/eb21e25fea34006e20027da90faf6ced31f36037.tar.gz"
+sha256 = "76d95b60a77d886a2f40fd969cd694545f511ee5ff59f33689cab5a2b32131c3"
+sha512 = "50acb2fe200a40c9ddaeb402108930eda24df540857c679314e3e3df34fd8f34051ec3ae2da3e80b8724f45c77f885fee1dcc168f1c5cf9e9accc9a6004c0d80"
