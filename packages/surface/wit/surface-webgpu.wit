@@ -2,9 +2,9 @@ interface surface-webgpu {
   use wasi:webgpu/webgpu@0.0.1.{gpu-device, gpu-texture, gpu-texture-format, gpu-texture-usage, predefined-color-space, gpu-canvas-tone-mapping, gpu-canvas-alpha-mode};
   use surface.{surface};
 
-  get-surface-context: func(surface: borrow<surface>) -> gpu-surface-context;
+  get-surface-context: func(surface: borrow<surface>) -> context;
 
-  record gpu-surface-configuration {
+  record context-configuration {
     device: borrow<gpu-device>,
     format: gpu-texture-format,
     usage: option<gpu-texture-usage>,
@@ -14,8 +14,8 @@ interface surface-webgpu {
     alpha-mode: option<gpu-canvas-alpha-mode>,
   }
 
-  resource gpu-surface-context {
-    configure: func(configuration: gpu-surface-configuration);
+  resource context {
+    configure: func(configuration: context-configuration);
     unconfigure: func();
     get-current-texture: func() -> gpu-texture;
     // TODO: consider if needed
