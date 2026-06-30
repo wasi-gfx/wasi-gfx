@@ -1,0 +1,77 @@
+name: Prepare Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Which part of the version to bump'
+        type: choice
+        required: true
+        default: patch
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  prepare:
+    name: Create Release PR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Determine next version
+        id: version
+        run: |
+          # surface is the canonical version source; all wasi-gfx packages share it
+          CURRENT=$(sed -n 's/^package wasi-gfx:surface@\([^;]*\);/\1/p' packages/surface/wit/surface.wit)
+          if [[ ! "$CURRENT" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Error: Current version '$CURRENT' is not a valid X.Y.Z version"
+            exit 1
+          fi
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT"
+          case "${{ inputs.bump }}" in
+            major) MAJOR=$((MAJOR + 1)); MINOR=0; PATCH=0 ;;
+            minor) MINOR=$((MINOR + 1)); PATCH=0 ;;
+            patch) PATCH=$((PATCH + 1)) ;;
+            *) echo "Error: unknown bump '${{ inputs.bump }}'"; exit 1 ;;
+          esac
+          VERSION="${MAJOR}.${MINOR}.${PATCH}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Preparing ${{ inputs.bump }} bump: $VERSION (from $CURRENT)"
+
+      - name: Bump package versions
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+
+          # Update version for all wasi-gfx packages (declarations and `use` references),
+          # but not the registry-sourced wasi:webgpu dep. In-repo deps (frame-buffer)
+          # resolve live via the path override in packages/surface/wkg.toml, so bumping
+          # the source is enough.
+          # Matches both `wasi-gfx:<pkg>@X.Y.Z` (package decls) and
+          # `wasi-gfx:<pkg>/<iface>@X.Y.Z` (use/import references).
+          for pkg in surface frame-buffer; do
+            find packages -name "*.wit" -exec sed -i -E \
+              "s|(wasi-gfx:${pkg}(/[a-z0-9-]+)?@)[0-9]+\.[0-9]+\.[0-9]+|\1${VERSION}|g" {} +
+          done
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8.1.0
+        with:
+          commit-message: "chore: bump version to ${{ steps.version.outputs.version }}"
+          branch: release/${{ steps.version.outputs.version }}
+          title: "Release ${{ steps.version.outputs.version }}"
+          body: |
+            Bumps package version to `${{ steps.version.outputs.version }}`.
+
+            Once merged, manually run the **Publish Release** workflow to:
+            - Create git tag `v${{ steps.version.outputs.version }}`
+            - Create GitHub release
+            - Publish packages to GHCR:
+              - `ghcr.io/wasi-gfx/surface:${{ steps.version.outputs.version }}`
+              - `ghcr.io/wasi-gfx/frame-buffer:${{ steps.version.outputs.version }}`
