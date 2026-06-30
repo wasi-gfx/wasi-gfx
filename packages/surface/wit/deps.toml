@@ -1,5 +1,0 @@
-[webgpu]
-url = "https://github.com/WebAssembly/wasi-gfx/archive/eb21e25fea34006e20027da90faf6ced31f36037.tar.gz"
-
-[frame-buffer]
-path = "../../frame-buffer/wit"
