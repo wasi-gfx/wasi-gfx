@@ -1,0 +1,2 @@
+[overrides]
+"wasi-gfx:frame-buffer" = { path = "../frame-buffer/wit" }
