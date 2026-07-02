@@ -1,5 +1,5 @@
 interface surface-frame-buffer {
-  use wasi-gfx:frame-buffer/frame-buffer@0.1.0.{buffer};
+  use wasi-gfx:frame-buffer/frame-buffer@0.2.0.{buffer};
   use surface.{surface};
 
   resource context {
@@ -12,5 +12,5 @@ interface surface-frame-buffer {
 
 world frame-buffer-imports {
   import surface-frame-buffer;
-  import wasi-gfx:frame-buffer/frame-buffer@0.1.0;
+  import wasi-gfx:frame-buffer/frame-buffer@0.2.0;
 }
