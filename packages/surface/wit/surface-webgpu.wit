@@ -1,5 +1,5 @@
 interface surface-webgpu {
-  use wasi:webgpu/webgpu@0.2.0-rc.2.{gpu-device, gpu-texture, gpu-texture-format, gpu-texture-usage, predefined-color-space, gpu-canvas-tone-mapping, gpu-canvas-alpha-mode};
+  use wasi:webgpu/webgpu@0.3.0-rc.2.{gpu-device, gpu-texture, gpu-texture-format, gpu-texture-usage, predefined-color-space, gpu-canvas-tone-mapping, gpu-canvas-alpha-mode};
   use surface.{surface};
 
   record context-configuration {
@@ -24,5 +24,5 @@ interface surface-webgpu {
 
 world webgpu-imports {
   import surface-webgpu;
-  import wasi:webgpu/webgpu@0.2.0-rc.2;
+  import wasi:webgpu/webgpu@0.3.0-rc.2;
 }
